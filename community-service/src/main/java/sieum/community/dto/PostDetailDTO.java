@@ -63,8 +63,6 @@ public class PostDetailDTO {
 		private Integer likeCount;
 		@JsonAlias(value = "comment_count")
 		private Integer commentCount;
-		@JsonAlias(value = "is_follow")
-		private boolean isFollow;
 		@JsonAlias(value = "post_created_date")
 		@JsonFormat(pattern = "yyyy.MM.dd HH:mm:ss", timezone = "Asia/Seoul")
 		private LocalDateTime createdDate;

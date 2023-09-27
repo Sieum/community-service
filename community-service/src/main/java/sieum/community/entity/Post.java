@@ -53,6 +53,9 @@ public class Post {
 	@Column(name = "post_title")
 	private String postTitle;
 
+	@Column(name = "post_album_image")
+	private String postAlbumImage;
+
 	@OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@Builder.Default
 	private List<Comment> comments = new ArrayList<>();

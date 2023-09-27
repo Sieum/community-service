@@ -1,5 +1,6 @@
 package sieum.community.service;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.crossstore.ChangeSetPersister;
@@ -12,7 +13,10 @@ import sieum.community.dto.PostLikeDTO;
 import sieum.community.dto.PostListDTO;
 import sieum.community.dto.PostSaveDTO;
 import sieum.community.dto.PostUpdateDTO;
+import sieum.community.entity.Member;
 import sieum.community.entity.Post;
+import sieum.community.entity.PostLike;
+import sieum.community.entity.PostLikeKey;
 import sieum.community.exception.ErrorCode;
 import sieum.community.exception.NotFoundException;
 import sieum.community.repository.MemberRepository;
@@ -43,9 +47,42 @@ public class PostServiceImpl implements PostService{
 		Post post = postRepository.findById(postId)
 			.orElseThrow(() -> new NotFoundException(ErrorCode.POST_NOT_FOUND));
 
+		Member member = memberRepository.findById(memberId)
+				.orElseThrow(() -> new NotFoundException(ErrorCode.MEMBER_NOT_FOUND));
 
 
-		return null;
+		PostLikeKey likeKey = PostLikeKey.builder()
+			.post(postId)
+			.member(memberId)
+			.build();
+		Optional<PostLike> postLike = postLikeRepository.findById(likeKey);
+		boolean isLike = false;
+		if(postLike.isPresent()){
+			isLike = true;
+		}
+
+		boolean isMyPost = false;
+		if(memberId == post.getMember().getId()){
+			isMyPost = true;
+		}
+
+		PostDetailDTO.Post postDetail = PostDetailDTO.Post.builder()
+			.albumImg(post.getPostAlbumImage())
+			.content(post.getPostContent())
+			.artist(post.getPostArtist())
+			.title(post.getPostTitle())
+			.nickname(member.getNickname())
+			.likeCount(post.getLikeCount())
+			.commentCount(post.getCommentCount())
+			.isLike(isLike)
+			.profileImg(member.getProfileImageUrl())
+			.createdDate(post.getCreatedDate())
+			.modifiedDate(post.getModifiedDate())
+			.build();
+
+		return PostDetailDTO.Response.builder()
+			.post(postDetail)
+			.build();
 	}
 
 	@Override
