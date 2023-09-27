@@ -3,9 +3,9 @@ package sieum.community.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import sieum.community.entity.PostEntity;
+import sieum.community.entity.Post;
 
 @Repository
-public interface PostRepository extends JpaRepository<PostEntity, Long> {
+public interface PostRepository extends JpaRepository<Post, Long> {
 
 }

@@ -1,6 +1,7 @@
 package sieum.community.entity;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,6 +16,6 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode
 public class PostLikeKey implements Serializable {
 
-	private Long member;
+	private UUID member;
 	private Long post;
 }

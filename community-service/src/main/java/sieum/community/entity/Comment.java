@@ -5,9 +5,12 @@ import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.DynamicUpdate;
@@ -28,7 +31,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CommentEntity {
+public class Comment {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,20 +41,21 @@ public class CommentEntity {
 	@Column(name = "comment_content", length = 50, unique = false, nullable = false)
 	private String commentContent;
 
-	@Column(name = "member_id", columnDefinition = "BINARY(16)")
-	private UUID memberId;
-
 	@Column(name = "post_id")
 	private Long postId;
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "member_id", nullable = false, updatable = false)
+	private Member member;
+
 	@CreatedDate
 	@Column(name = "comment_created_date")
-	private LocalDateTime commentCreatedDate;
+	private LocalDateTime createdDate;
 
 	@LastModifiedDate
 	@Column(name = "commment_modified_date")
-	private LocalDateTime commentModifiedDate;
+	private LocalDateTime modifiedDate;
 
 	@Column(name = "comment_is_deleted")
-	private boolean commentIsDeleted;
+	private boolean isDeleted;
 }

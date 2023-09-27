@@ -12,9 +12,12 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.SQLDelete;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -31,15 +34,12 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PostEntity{
+public class Post {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "post_id")
 	private Long postId;
-
-	@Column(name = "member_id", columnDefinition = "BINARY(16)")
-	private UUID memberId;
 
 	@Column(name = "postContent", length = 500, unique = false, nullable = true, columnDefinition = "TEXT")
 	private String postContent;
@@ -55,16 +55,28 @@ public class PostEntity{
 
 	@OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@Builder.Default
-	private List<CommentEntity> comments = new ArrayList<>();
+	private List<Comment> comments = new ArrayList<>();
 
 	@CreatedDate
 	@Column(name = "post_created_date", updatable = false)
-	private LocalDateTime postCreatedDate;
+	private LocalDateTime createdDate;
 
 	@LastModifiedDate
 	@Column(name = "post_modified_date")
-	private LocalDateTime postModifiedDate;
+	private LocalDateTime modifiedDate;
 
-	@Column(name = "post_is_deleted")
-	private boolean postIsDeleted;
+	@Column(name = "post_is_deleted", columnDefinition = "boolean default false")
+	private boolean isDeleted = false;
+
+	@JoinColumn(name = "member_id", nullable = false)
+	@ManyToOne
+	private Member member;
+
+	//댓글 개수
+	@Formula("(SELECT count(*) FROM comment c WHERE c.post_seq = post_id AND c.comment_is_deleted = TRUE)")
+	private int commentCount;
+
+	//좋아요 개수
+	@Formula("(SELECT count(1) FROM post_like pl WHERE pl.post_id = post_id)")
+	private int likeCount;
 }

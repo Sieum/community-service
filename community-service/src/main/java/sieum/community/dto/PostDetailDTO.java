@@ -2,6 +2,7 @@ package sieum.community.dto;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -24,7 +25,7 @@ public class PostDetailDTO {
 
 		@JsonIgnore
 		@JsonAlias(value = "member_id")
-		private Long memberId;
+		private UUID memberId;
 
 		@JsonIgnore
 		@JsonAlias(value = "post_id")
@@ -66,9 +67,9 @@ public class PostDetailDTO {
 		private boolean isFollow;
 		@JsonAlias(value = "post_created_date")
 		@JsonFormat(pattern = "yyyy.MM.dd HH:mm:ss", timezone = "Asia/Seoul")
-		private LocalDateTime postCreatedDate;
+		private LocalDateTime createdDate;
 		@JsonAlias(value = "post_modified_date")
 		@JsonFormat(pattern = "yyyy.MM.dd HH:mm:ss", timezone = "Asia/Seoul")
-		private LocalDateTime postModifiedDate;
+		private LocalDateTime modifiedDate;
 	}
 }

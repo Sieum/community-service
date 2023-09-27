@@ -1,5 +1,7 @@
 package sieum.community.dto;
 
+import java.util.UUID;
+
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -18,7 +20,7 @@ public class PostDeleteDTO {
 	public static class Request{
 		@JsonIgnore
 		@JsonAlias(value = "member_id")
-		private Long memberId;
+		private UUID memberId;
 		@JsonIgnore
 		@JsonAlias(value = "post_id")
 		private Long postId;

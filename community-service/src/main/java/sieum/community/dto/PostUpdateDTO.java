@@ -2,6 +2,7 @@ package sieum.community.dto;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -22,7 +23,7 @@ public class PostUpdateDTO {
 
 		@JsonIgnore
 		@JsonAlias(value = "member_id")
-		private long memberId;
+		private UUID memberId;
 
 		@JsonIgnore
 		@JsonAlias(value = "post_id")
@@ -37,6 +38,7 @@ public class PostUpdateDTO {
 	@NoArgsConstructor
 	@Builder
 	public static class Response{
+		private long postId;
 		private boolean success;
 	}
 }

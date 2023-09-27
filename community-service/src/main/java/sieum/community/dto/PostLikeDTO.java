@@ -1,5 +1,7 @@
 package sieum.community.dto;
 
+import java.util.UUID;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -18,7 +20,7 @@ public class PostLikeDTO {
 	public static class Request{
 		@JsonIgnore
 		@JsonProperty(value = "member_id")
-		private Long memberId;
+		private UUID memberId;
 		@JsonIgnore
 		@JsonProperty(value = "post_id")
 		private Long postId;

@@ -2,6 +2,7 @@ package sieum.community.dto;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -20,7 +21,7 @@ public class PostListDTO {
 	@NoArgsConstructor
 	@ToString
 	public static class Request{
-		private Long memberId;
+		private UUID memberId;
 		private int page = 0;
 		private String filter = "location";
 	}
