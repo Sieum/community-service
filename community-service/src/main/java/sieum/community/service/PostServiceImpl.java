@@ -3,6 +3,7 @@ package sieum.community.service;
 import java.util.Optional;
 import java.util.UUID;
 
+import io.hypersistence.utils.hibernate.util.StringUtils;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,7 @@ import sieum.community.entity.PostLike;
 import sieum.community.entity.PostLikeKey;
 import sieum.community.exception.ErrorCode;
 import sieum.community.exception.NotFoundException;
+import sieum.community.exception.ValidationException;
 import sieum.community.repository.MemberRepository;
 import sieum.community.repository.PostLikeRepository;
 import sieum.community.repository.PostRepository;
@@ -87,7 +89,38 @@ public class PostServiceImpl implements PostService{
 
 	@Override
 	public PostSaveDTO.Response savePost(PostSaveDTO.Request dto) {
-		return null;
+		System.out.println("서비스에는 들어오니..?");
+		UUID memberId = dto.getMemberId();
+		String title = dto.getTitle();
+		String content = dto.getContent();
+		String artist = dto.getArtist();
+		String albumImg = dto.getAlbumImg();
+		String musicUri = dto.getMusicUri();
+
+		// 입력값 확인
+		if(memberId == null || StringUtils.isBlank(title) || StringUtils.isBlank(artist) || StringUtils.isBlank(albumImg)){
+			throw new ValidationException(ErrorCode.MISSING_INPUT_VALUE);
+		}
+
+		// member 확인
+		Member member = memberRepository.findById(memberId)
+				.orElseThrow(() -> new NotFoundException(ErrorCode.MEMBER_NOT_FOUND));
+
+		// post 등록
+		Post post = Post.builder()
+				.member(member)
+				.postTitle(title)
+				.postContent(content)
+				.postArtist(artist)
+				.postAlbumImage(albumImg)
+				.postMusicUri(musicUri)
+				.build();
+		postRepository.save(post);
+
+		return PostSaveDTO.Response.builder()
+				.success(true)
+				.postId(post.getPostId())
+				.build();
 	}
 
 	@Override

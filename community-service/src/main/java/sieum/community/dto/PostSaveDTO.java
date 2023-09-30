@@ -22,11 +22,16 @@ public class PostSaveDTO {
 		@JsonIgnore
 		@JsonAlias(value = "member_id")
 		private UUID memberId;
+		@JsonAlias(value = "post_content")
 		private String content;
-		@JsonAlias(value = "album_img")
+		@JsonAlias(value = "post_album_img")
 		private String albumImg;
+		@JsonAlias(value = "post_title")
 		private String title;
+		@JsonAlias(value = "post_artist")
 		private String artist;
+		@JsonAlias(value = "post_music_uri")
+		private String musicUri;
 	}
 
 	@Getter
