@@ -40,8 +40,6 @@ public class PostSaveDTO {
 	@NoArgsConstructor
 	@Builder
 	public static class Response{
-		@JsonAlias(value = "post_id")
-		private Long postId;
 		private boolean success;
 	}
 

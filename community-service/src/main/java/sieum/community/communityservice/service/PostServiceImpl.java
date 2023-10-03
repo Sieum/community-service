@@ -1,5 +1,6 @@
 package sieum.community.communityservice.service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -88,16 +89,12 @@ public class PostServiceImpl implements PostService{
 
 	@Override
 	public PostSaveDTO.Response savePost(PostSaveDTO.Request dto) {
-		System.out.println("서비스에는 들어오니..?");
 		UUID memberId = dto.getMemberId();
 		String title = dto.getTitle();
 		String content = dto.getContent();
 		String artist = dto.getArtist();
 		String albumImg = dto.getAlbumImg();
 		String musicUri = dto.getMusicUri();
-
-		System.out.println("서비스 "+memberId);
-		System.out.println(title + " " + artist + " " + albumImg);
 
 		// 입력값 확인
 		if(memberId == null || StringUtils.isBlank(title) || StringUtils.isBlank(artist) || StringUtils.isBlank(albumImg)){
@@ -108,6 +105,9 @@ public class PostServiceImpl implements PostService{
 		Member member = memberRepository.findById(memberId)
 				.orElseThrow(() -> new NotFoundException(ErrorCode.MEMBER_NOT_FOUND));
 
+		// 등록 날짜
+		LocalDateTime createdDate = LocalDateTime.now();
+
 		// post 등록
 		Post post = Post.builder()
 				.member(member)
@@ -116,12 +116,13 @@ public class PostServiceImpl implements PostService{
 				.postArtist(artist)
 				.postAlbumImage(albumImg)
 				.postMusicUri(musicUri)
+				.createdDate(createdDate)
+				.modifiedDate(createdDate)
 				.build();
 		postRepository.save(post);
 
 		return PostSaveDTO.Response.builder()
 				.success(true)
-				.postId(post.getPostId())
 				.build();
 	}
 
