@@ -193,6 +193,39 @@ public class PostServiceImpl implements PostService{
 	@Override
 	@Transactional
 	public PostLikeDTO.Response likePost(PostLikeDTO.Request dto) {
-		return null;
+		Long postId = dto.getPostId();
+		UUID memberId = dto.getMemberId();
+
+		if(postId == null || memberId == null){
+			throw new ValidationException(ErrorCode.MISSING_INPUT_VALUE);
+		}
+
+		Member member = memberRepository.findById(memberId)
+				.orElseThrow(() -> new NotFoundException(ErrorCode.MEMBER_NOT_FOUND));
+
+		Post post = postRepository.findById(postId)
+				.orElseThrow(() -> new NotFoundException(ErrorCode.POST_NOT_FOUND));
+
+		PostLikeKey key = PostLikeKey.builder()
+				.post(postId)
+				.member(memberId)
+				.build();
+
+		Optional<PostLike> postLike = postLikeRepository.findById(key);
+		boolean like = false;
+		if(postLike.isPresent()){
+			postLikeRepository.delete(postLike.get());
+			like = false;
+		} else {
+			postLikeRepository.save(PostLike.builder()
+					.post(post)
+					.member(member)
+					.build());
+			like = true;
+		}
+
+		return PostLikeDTO.Response.builder()
+				.like(like)
+				.build();
 	}
 }

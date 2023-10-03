@@ -7,10 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import lombok.RequiredArgsConstructor;
-import sieum.community.communityservice.dto.PostDeleteDTO;
-import sieum.community.communityservice.dto.PostDetailDTO;
-import sieum.community.communityservice.dto.PostSaveDTO;
-import sieum.community.communityservice.dto.PostUpdateDTO;
+import sieum.community.communityservice.dto.*;
 import sieum.community.communityservice.service.PostService;
 
 @RestController
@@ -61,6 +58,17 @@ public class PostController {
 				.memberId(UUID.fromString(memberId))
 				.build();
 		PostDeleteDTO.Response success = postService.deletePost(dto);
+		return new ResponseEntity<>(success, HttpStatus.OK);
+	}
+
+	@PostMapping(value = "/{postId}/like")
+	public ResponseEntity<PostLikeDTO.Response> likePost(
+			@RequestHeader(name = "uuid") String memberId,
+			@PathVariable Long postId,
+			@RequestBody PostLikeDTO.Request dto){
+		dto.setPostId(postId);
+		dto.setMemberId(UUID.fromString(memberId));
+		PostLikeDTO.Response success = postService.likePost(dto);
 		return new ResponseEntity<>(success, HttpStatus.OK);
 	}
 }
