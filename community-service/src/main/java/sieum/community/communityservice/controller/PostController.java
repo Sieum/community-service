@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import lombok.RequiredArgsConstructor;
+import sieum.community.communityservice.dto.PostDeleteDTO;
 import sieum.community.communityservice.dto.PostDetailDTO;
 import sieum.community.communityservice.dto.PostSaveDTO;
 import sieum.community.communityservice.dto.PostUpdateDTO;
@@ -49,5 +50,17 @@ public class PostController {
 		dto.setPostId(postId);
 		PostUpdateDTO.Response success = postService.updatePost(dto);
 		return new ResponseEntity<>(success,HttpStatus.OK);
+	}
+
+	@DeleteMapping(value = "/{postId}")
+	public ResponseEntity<PostDeleteDTO.Response> deleltePost(
+			@RequestHeader(name = "uuid") String memberId,
+			@PathVariable Long postId){
+		PostDeleteDTO.Request dto = PostDeleteDTO.Request.builder()
+				.postId(postId)
+				.memberId(UUID.fromString(memberId))
+				.build();
+		PostDeleteDTO.Response success = postService.deletePost(dto);
+		return new ResponseEntity<>(success, HttpStatus.OK);
 	}
 }

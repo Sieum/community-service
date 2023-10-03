@@ -84,7 +84,8 @@ public class PostServiceImpl implements PostService{
 			.profileImg(member.getProfileImageUrl())
 			.createdDate(post.getCreatedDate())
 			.modifiedDate(post.getModifiedDate())
-			.build();
+				.postId(postId)
+				.build();
 
 		return PostDetailDTO.Response.builder()
 			.post(postDetail)
@@ -163,7 +164,30 @@ public class PostServiceImpl implements PostService{
 	@Override
 	@Transactional
 	public PostDeleteDTO.Response deletePost(PostDeleteDTO.Request dto) {
-		return null;
+		Long postId = dto.getPostId();
+		UUID memberId = dto.getMemberId();
+
+		if(postId == null || memberId == null){
+			throw new ValidationException(ErrorCode.MISSING_INPUT_VALUE);
+		}
+
+		Member member = memberRepository.findById(memberId)
+				.orElseThrow(() -> new NotFoundException(ErrorCode.MEMBER_NOT_FOUND));
+
+		Post post = postRepository.findById(postId)
+				.orElseThrow(() -> new NotFoundException(ErrorCode.POST_NOT_FOUND));
+
+		if(!memberId.equals(post.getMember().getId())){
+			throw new AccessDeniedException(ErrorCode.HANDLE_ACCESS_DENIED);
+		}
+
+		postRepository.delete(post);
+
+//		post.deletePost(true);
+
+		return PostDeleteDTO.Response.builder()
+				.success(true)
+				.build();
 	}
 
 	@Override

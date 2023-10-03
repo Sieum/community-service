@@ -86,4 +86,9 @@ public class Post {
 	public void updatedDate(LocalDateTime updatedDate){
 		this.modifiedDate = updatedDate;
 	}
+
+	// 게시글 삭제
+	public void deletePost(boolean flag){
+		this.isDeleted = flag;
+	}
 }
