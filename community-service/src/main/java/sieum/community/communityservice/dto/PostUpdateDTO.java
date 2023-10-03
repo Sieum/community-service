@@ -38,7 +38,6 @@ public class PostUpdateDTO {
 	@NoArgsConstructor
 	@Builder
 	public static class Response{
-		private long postId;
 		private boolean success;
 	}
 }

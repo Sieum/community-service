@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import lombok.RequiredArgsConstructor;
 import sieum.community.communityservice.dto.PostDetailDTO;
 import sieum.community.communityservice.dto.PostSaveDTO;
+import sieum.community.communityservice.dto.PostUpdateDTO;
 import sieum.community.communityservice.service.PostService;
 
 @RestController
@@ -37,5 +38,16 @@ public class PostController {
 		dto.setMemberId(UUID.fromString(memberId));
 		PostSaveDTO.Response res = postService.savePost(dto);
 		return new ResponseEntity<>(res, HttpStatus.CREATED);
+	}
+
+	@PutMapping(value = "/{postId}")
+	public ResponseEntity<PostUpdateDTO.Response> updatePost(
+			@RequestHeader(name = "uuid") String memberId,
+			@PathVariable Long postId,
+			@RequestBody PostUpdateDTO.Request dto){
+		dto.setMemberId(UUID.fromString(memberId));
+		dto.setPostId(postId);
+		PostUpdateDTO.Response success = postService.updatePost(dto);
+		return new ResponseEntity<>(success,HttpStatus.OK);
 	}
 }

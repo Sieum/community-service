@@ -8,6 +8,7 @@ import io.hypersistence.utils.hibernate.util.StringUtils;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 import sieum.community.communityservice.entity.Member;
 import sieum.community.communityservice.entity.Post;
 import sieum.community.communityservice.entity.PostLike;
@@ -18,6 +19,7 @@ import sieum.community.communityservice.dto.PostLikeDTO;
 import sieum.community.communityservice.dto.PostListDTO;
 import sieum.community.communityservice.dto.PostSaveDTO;
 import sieum.community.communityservice.dto.PostUpdateDTO;
+import sieum.community.communityservice.exception.AccessDeniedException;
 import sieum.community.communityservice.exception.ErrorCode;
 import sieum.community.communityservice.exception.NotFoundException;
 import sieum.community.communityservice.exception.ValidationException;
@@ -34,6 +36,7 @@ public class PostServiceImpl implements PostService{
 	private final PostLikeRepository postLikeRepository;
 
 	@Override
+	@Transactional
 	public PostListDTO.Response getAllPosts(PostListDTO.Request dto) {
 		int page = dto.getPage();
 		String filter = dto.getFilter();
@@ -42,6 +45,7 @@ public class PostServiceImpl implements PostService{
 	}
 
 	@Override
+	@Transactional
 	public PostDetailDTO.Response getPost(PostDetailDTO.Request dto) {
 		Long postId = dto.getPostId();
 		UUID memberId = dto.getMemberId();
@@ -88,6 +92,7 @@ public class PostServiceImpl implements PostService{
 	}
 
 	@Override
+	@Transactional
 	public PostSaveDTO.Response savePost(PostSaveDTO.Request dto) {
 		UUID memberId = dto.getMemberId();
 		String title = dto.getTitle();
@@ -127,16 +132,42 @@ public class PostServiceImpl implements PostService{
 	}
 
 	@Override
+	@Transactional
 	public PostUpdateDTO.Response updatePost(PostUpdateDTO.Request dto) {
-		return null;
+		Long postId = dto.getPostId();
+		UUID memberId = dto.getMemberId();
+		String content = dto.getContent();
+
+		if(memberId == null || postId == null || StringUtils.isBlank(content)){
+			throw new ValidationException(ErrorCode.MISSING_INPUT_VALUE);
+		}
+
+		Member member = memberRepository.findById(memberId)
+				.orElseThrow(() -> new NotFoundException(ErrorCode.MEMBER_NOT_FOUND));
+
+		Post post = postRepository.findById(postId)
+				.orElseThrow(() -> new NotFoundException(ErrorCode.POST_NOT_FOUND));
+
+		if(!post.getMember().getId().equals(memberId)){
+			throw new AccessDeniedException(ErrorCode.HANDLE_ACCESS_DENIED);
+		}
+
+		post.updateContent(content);
+		post.updatedDate(LocalDateTime.now());
+
+		return PostUpdateDTO.Response.builder()
+				.success(true)
+				.build();
 	}
 
 	@Override
+	@Transactional
 	public PostDeleteDTO.Response deletePost(PostDeleteDTO.Request dto) {
 		return null;
 	}
 
 	@Override
+	@Transactional
 	public PostLikeDTO.Response likePost(PostLikeDTO.Request dto) {
 		return null;
 	}

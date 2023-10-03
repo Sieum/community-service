@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import io.hypersistence.utils.hibernate.util.StringUtils;
 import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.SQLDelete;
 import org.springframework.data.annotation.CreatedDate;
@@ -16,6 +17,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import sieum.community.communityservice.exception.ErrorCode;
+import sieum.community.communityservice.exception.ValidationException;
 
 @Entity
 @Table(name = "post")
@@ -73,4 +76,14 @@ public class Post {
 	//좋아요 개수
 	@Formula("(SELECT count(1) FROM post_like pl WHERE pl.post_id = post_id)")
 	private int likeCount;
+
+	//게시글 수정
+	public void updateContent(String content){
+		if(StringUtils.isBlank(content)) throw new ValidationException(ErrorCode.INVALID_INPUT_VALUE);
+		this.postContent = content;
+	}
+
+	public void updatedDate(LocalDateTime updatedDate){
+		this.modifiedDate = updatedDate;
+	}
 }
