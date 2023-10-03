@@ -67,7 +67,7 @@ public class Post {
 	private Member member;
 
 	//댓글 개수
-	@Formula("(SELECT count(*) FROM comment c WHERE c.post_seq = post_id AND c.comment_is_deleted = TRUE)")
+	@Formula("(SELECT count(*) FROM comment c WHERE c.post_id = post_id AND c.comment_is_deleted = 1)")
 	private int commentCount;
 
 	//좋아요 개수

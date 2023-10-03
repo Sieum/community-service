@@ -38,5 +38,4 @@ public class PostController {
 		PostSaveDTO.Response res = postService.savePost(dto);
 		return new ResponseEntity<>(res, HttpStatus.CREATED);
 	}
-
 }
