@@ -1,7 +1,6 @@
-package sieum.community.entity;
+package sieum.community.communityservice.entity;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -41,11 +40,12 @@ public class Comment {
 	@Column(name = "comment_content", length = 50, unique = false, nullable = false)
 	private String commentContent;
 
-	@Column(name = "post_id")
-	private Long postId;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "post_id", nullable = false)
+	private Post post;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "member_id", nullable = false, updatable = false)
+	@JoinColumn(name = "member_id", nullable = false)
 	private Member member;
 
 	@CreatedDate

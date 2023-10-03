@@ -1,17 +1,15 @@
-package sieum.community.controller;
+package sieum.community.communityservice.controller;
 
 import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import lombok.RequiredArgsConstructor;
-import sieum.community.dto.PostDetailDTO;
-import sieum.community.dto.PostListDTO;
-import sieum.community.dto.PostSaveDTO;
-import sieum.community.service.PostService;
+import sieum.community.communityservice.dto.PostDetailDTO;
+import sieum.community.communityservice.dto.PostSaveDTO;
+import sieum.community.communityservice.service.PostService;
 
 @RestController
 @RequestMapping("api/posts")
@@ -22,10 +20,10 @@ public class PostController {
 
 	@GetMapping(value = "/{postId}")
 	public ResponseEntity<PostDetailDTO.Response> getPost(
-		@RequestHeader(value="memberId") UUID memberId,
+		@RequestHeader(name="uuid") String memberId,
 		@PathVariable Long postId){
 		PostDetailDTO.Request dto = PostDetailDTO.Request.builder()
-			.memberId(memberId)
+			.memberId(UUID.fromString(memberId))
 			.postId(postId)
 			.build();
 		PostDetailDTO.Response post = postService.getPost(dto);
@@ -34,10 +32,9 @@ public class PostController {
 
 	@PostMapping
 	public ResponseEntity<PostSaveDTO.Response> savePost(
-			@RequestHeader(value="memberId") UUID memberId,
-			PostSaveDTO.Request dto){
-		System.out.println("여기 들어오니..?");
-		dto.setMemberId(memberId);
+			@RequestHeader(name="uuid") String memberId,
+			@RequestBody PostSaveDTO.Request dto){
+		dto.setMemberId(UUID.fromString(memberId));
 		PostSaveDTO.Response res = postService.savePost(dto);
 		return new ResponseEntity<>(res, HttpStatus.CREATED);
 	}

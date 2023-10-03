@@ -1,4 +1,4 @@
-package sieum.community.exception;
+package sieum.community.communityservice.exception;
 
 import org.springframework.http.HttpStatus;
 

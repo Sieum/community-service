@@ -1,4 +1,4 @@
-package sieum.community.exception;
+package sieum.community.communityservice.exception;
 
 public class CustomException extends RuntimeException {
 

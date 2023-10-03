@@ -1,4 +1,4 @@
-package sieum.community.entity;
+package sieum.community.communityservice.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;

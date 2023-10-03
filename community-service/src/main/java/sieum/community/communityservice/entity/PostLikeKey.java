@@ -1,4 +1,4 @@
-package sieum.community.entity;
+package sieum.community.communityservice.entity;
 
 import java.io.Serializable;
 import java.util.UUID;

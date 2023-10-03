@@ -1,4 +1,4 @@
-package sieum.community.exception;
+package sieum.community.communityservice.exception;
 
 /**
  * 입력값이 잘못되었을 때 발생하는 EXCEPTION

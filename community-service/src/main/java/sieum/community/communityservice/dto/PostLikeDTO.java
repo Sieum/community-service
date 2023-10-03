@@ -1,9 +1,9 @@
-package sieum.community.dto;
+package sieum.community.communityservice.dto;
 
 import java.util.UUID;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-public class PostDeleteDTO {
+public class PostLikeDTO {
 	@Getter
 	@Setter
 	@AllArgsConstructor
@@ -19,11 +19,13 @@ public class PostDeleteDTO {
 	@Builder
 	public static class Request{
 		@JsonIgnore
-		@JsonAlias(value = "member_id")
+		@JsonProperty(value = "member_id")
 		private UUID memberId;
 		@JsonIgnore
-		@JsonAlias(value = "post_id")
+		@JsonProperty(value = "post_id")
 		private Long postId;
+		@JsonProperty(value = "is_like")
+		private boolean isLike;
 	}
 
 	@Getter
@@ -32,6 +34,6 @@ public class PostDeleteDTO {
 	@NoArgsConstructor
 	@Builder
 	public static class Response{
-		private boolean success;
+		private boolean like;
 	}
 }

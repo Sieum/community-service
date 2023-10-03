@@ -1,29 +1,28 @@
-package sieum.community.service;
+package sieum.community.communityservice.service;
 
 import java.util.Optional;
 import java.util.UUID;
 
 import io.hypersistence.utils.hibernate.util.StringUtils;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
-import sieum.community.dto.PostDeleteDTO;
-import sieum.community.dto.PostDetailDTO;
-import sieum.community.dto.PostLikeDTO;
-import sieum.community.dto.PostListDTO;
-import sieum.community.dto.PostSaveDTO;
-import sieum.community.dto.PostUpdateDTO;
-import sieum.community.entity.Member;
-import sieum.community.entity.Post;
-import sieum.community.entity.PostLike;
-import sieum.community.entity.PostLikeKey;
-import sieum.community.exception.ErrorCode;
-import sieum.community.exception.NotFoundException;
-import sieum.community.exception.ValidationException;
-import sieum.community.repository.MemberRepository;
-import sieum.community.repository.PostLikeRepository;
-import sieum.community.repository.PostRepository;
+import sieum.community.communityservice.entity.Member;
+import sieum.community.communityservice.entity.Post;
+import sieum.community.communityservice.entity.PostLike;
+import sieum.community.communityservice.entity.PostLikeKey;
+import sieum.community.communityservice.dto.PostDeleteDTO;
+import sieum.community.communityservice.dto.PostDetailDTO;
+import sieum.community.communityservice.dto.PostLikeDTO;
+import sieum.community.communityservice.dto.PostListDTO;
+import sieum.community.communityservice.dto.PostSaveDTO;
+import sieum.community.communityservice.dto.PostUpdateDTO;
+import sieum.community.communityservice.exception.ErrorCode;
+import sieum.community.communityservice.exception.NotFoundException;
+import sieum.community.communityservice.exception.ValidationException;
+import sieum.community.communityservice.repository.MemberRepository;
+import sieum.community.communityservice.repository.PostLikeRepository;
+import sieum.community.communityservice.repository.PostRepository;
 
 @Service
 @RequiredArgsConstructor
@@ -96,6 +95,9 @@ public class PostServiceImpl implements PostService{
 		String artist = dto.getArtist();
 		String albumImg = dto.getAlbumImg();
 		String musicUri = dto.getMusicUri();
+
+		System.out.println("서비스 "+memberId);
+		System.out.println(title + " " + artist + " " + albumImg);
 
 		// 입력값 확인
 		if(memberId == null || StringUtils.isBlank(title) || StringUtils.isBlank(artist) || StringUtils.isBlank(albumImg)){

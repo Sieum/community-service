@@ -1,4 +1,4 @@
-package sieum.community.dto;
+package sieum.community.communityservice.dto;
 
 import java.util.UUID;
 
@@ -11,8 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-public class PostSaveDTO {
-
+public class PostDeleteDTO {
 	@Getter
 	@Setter
 	@AllArgsConstructor
@@ -22,16 +21,9 @@ public class PostSaveDTO {
 		@JsonIgnore
 		@JsonAlias(value = "member_id")
 		private UUID memberId;
-		@JsonAlias(value = "post_content")
-		private String content;
-		@JsonAlias(value = "post_album_img")
-		private String albumImg;
-		@JsonAlias(value = "post_title")
-		private String title;
-		@JsonAlias(value = "post_artist")
-		private String artist;
-		@JsonAlias(value = "post_music_uri")
-		private String musicUri;
+		@JsonIgnore
+		@JsonAlias(value = "post_id")
+		private Long postId;
 	}
 
 	@Getter
@@ -40,10 +32,6 @@ public class PostSaveDTO {
 	@NoArgsConstructor
 	@Builder
 	public static class Response{
-		@JsonAlias(value = "post_id")
-		private Long postId;
 		private boolean success;
 	}
-
-
 }

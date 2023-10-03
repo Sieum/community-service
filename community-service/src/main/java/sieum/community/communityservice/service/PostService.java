@@ -1,11 +1,11 @@
-package sieum.community.service;
+package sieum.community.communityservice.service;
 
-import sieum.community.dto.PostDeleteDTO;
-import sieum.community.dto.PostDetailDTO;
-import sieum.community.dto.PostLikeDTO;
-import sieum.community.dto.PostListDTO;
-import sieum.community.dto.PostSaveDTO;
-import sieum.community.dto.PostUpdateDTO;
+import sieum.community.communityservice.dto.PostDeleteDTO;
+import sieum.community.communityservice.dto.PostDetailDTO;
+import sieum.community.communityservice.dto.PostLikeDTO;
+import sieum.community.communityservice.dto.PostListDTO;
+import sieum.community.communityservice.dto.PostSaveDTO;
+import sieum.community.communityservice.dto.PostUpdateDTO;
 
 public interface PostService {
 	//전체 게시글 조회

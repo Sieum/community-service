@@ -1,4 +1,4 @@
-package sieum.community.dto;
+package sieum.community.communityservice.dto;
 
 import java.time.LocalDateTime;
 import java.util.List;

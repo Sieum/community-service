@@ -1,21 +1,10 @@
-package sieum.community.entity;
+package sieum.community.communityservice.entity;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.SQLDelete;
@@ -26,10 +15,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Table(name = "post")
 @SQLDelete(sql = "UPDATE post SET post_is_deleted = TRUE WHERE post_id = ?")
+@EntityListeners(value = AuditingEntityListener.class)
 @Getter
 @Builder
 @AllArgsConstructor

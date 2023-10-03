@@ -1,4 +1,4 @@
-package sieum.community.entity;
+package sieum.community.communityservice.entity;
 
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import lombok.AllArgsConstructor;
@@ -16,7 +16,7 @@ import java.util.UUID;
 
 @Getter
 @Entity
-@Table(name = "members")
+@Table(name = "member")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -36,7 +36,7 @@ public class Member {
 	@Column(name = "member_profile_image_url")
 	private String profileImageUrl;
 
-	@Column(name = "member_profile_music_url")
+	@Column(name = "member_profile_music_uri")
 	private String profileMusicUri;
 
 	@Column(name = "member_album_image_url")
@@ -50,6 +50,9 @@ public class Member {
 
 	@Column(name = "member_region_code")
 	private Long regionCode;
+
+	@Column(name = "member_refresh_token")
+	private Long refreshToken;
 
 	@Type(type = "json")
 	@Column(name = "member_hashtags", columnDefinition = "json")
