@@ -72,7 +72,7 @@ public class Comment {
 		this.modifiedDate = updatedDate;
 	}
 
-	public void deletePost(boolean flag){
+	public void deleteComment(boolean flag){
 		this.isDeleted = flag;
 	}
 }

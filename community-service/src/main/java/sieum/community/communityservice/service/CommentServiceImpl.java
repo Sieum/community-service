@@ -108,6 +108,32 @@ public class CommentServiceImpl implements CommentService{
 	@Override
 	@Transactional
 	public CommentDeleteDTO.Response delete(CommentDeleteDTO.Request dto) {
-		return null;
+		UUID memberId = dto.getMemberId();
+		Long postId = dto.getPostId();
+		Long commentId = dto.getCommentId();
+
+		if(memberId == null || postId == null || commentId == null){
+			throw new ValidationException(ErrorCode.MISSING_INPUT_VALUE);
+		}
+
+		Member member = memberRepository.findById(memberId)
+			.orElseThrow(() -> new NotFoundException(ErrorCode.MEMBER_NOT_FOUND));
+
+		Post post = postRepository.findById(postId)
+			.orElseThrow(() -> new NotFoundException(ErrorCode.POST_NOT_FOUND));
+
+		Comment comment = commentRepository.findById(commentId)
+			.orElseThrow(()-> new NotFoundException(ErrorCode.COMMENT_NOT_FOUND));
+
+		if(comment.getMember().getId() != memberId){
+			throw new AccessDeniedException(ErrorCode.HANDLE_ACCESS_DENIED);
+		}
+
+		commentRepository.delete(comment);
+		// comment.deleteComment(true);
+
+		return CommentDeleteDTO.Response.builder()
+			.success(true)
+			.build();
 	}
 }
