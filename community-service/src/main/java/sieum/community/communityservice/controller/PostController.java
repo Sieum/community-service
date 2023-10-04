@@ -17,6 +17,15 @@ public class PostController {
 
 	private final PostService postService;
 
+	@GetMapping
+	public ResponseEntity<PostListDTO.Response> getAllPosts(
+		@RequestHeader(name = "uuid") String memberId,
+		@RequestBody PostListDTO.Request dto){
+		dto.setMemberId(UUID.fromString(memberId));
+		PostListDTO.Response list = postService.getAllPosts(dto);
+		return new ResponseEntity<>(list, HttpStatus.OK);
+	}
+
 	@GetMapping(value = "/{postId}")
 	public ResponseEntity<PostDetailDTO.Response> getPost(
 		@RequestHeader(name="uuid") String memberId,
@@ -33,6 +42,12 @@ public class PostController {
 	public ResponseEntity<PostSaveDTO.Response> savePost(
 			@RequestHeader(name="uuid") String memberId,
 			@RequestBody PostSaveDTO.Request dto){
+		System.out.println(memberId);
+		System.out.println(dto.getTitle());
+		System.out.println(dto.getContent());
+		System.out.println(dto.getAlbumImg());
+		System.out.println(dto.getArtist());
+		System.out.println(dto.getMusicUri());
 		dto.setMemberId(UUID.fromString(memberId));
 		PostSaveDTO.Response res = postService.savePost(dto);
 		return new ResponseEntity<>(res, HttpStatus.CREATED);

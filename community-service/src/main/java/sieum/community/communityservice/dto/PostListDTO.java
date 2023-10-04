@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -21,9 +22,13 @@ public class PostListDTO {
 	@NoArgsConstructor
 	@ToString
 	public static class Request{
+		@JsonIgnore
 		private UUID memberId;
+		@Builder.Default
 		private int page = 0;
-		private String filter = "location";
+		@Builder.Default
+		private int size = 10;
+		private String filter;
 	}
 
 	@Getter

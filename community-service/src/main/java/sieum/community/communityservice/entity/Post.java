@@ -22,7 +22,7 @@ import sieum.community.communityservice.exception.ValidationException;
 
 @Entity
 @Table(name = "post")
-@SQLDelete(sql = "UPDATE post SET post_is_deleted = TRUE WHERE post_id = ?")
+@SQLDelete(sql = "UPDATE post SET post_is_deleted = 1 WHERE post_id = ?")
 @EntityListeners(value = AuditingEntityListener.class)
 @Getter
 @Builder

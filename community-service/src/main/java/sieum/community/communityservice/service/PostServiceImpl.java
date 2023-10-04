@@ -1,10 +1,17 @@
 package sieum.community.communityservice.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import io.hypersistence.utils.hibernate.util.StringUtils;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -39,9 +46,41 @@ public class PostServiceImpl implements PostService{
 	@Transactional
 	public PostListDTO.Response getAllPosts(PostListDTO.Request dto) {
 		int page = dto.getPage();
+		int size = dto.getSize();
 		String filter = dto.getFilter();
 		UUID memberId = dto.getMemberId();
-		return null;
+
+		Pageable pageable = PageRequest.of(page, size);
+		Page<Object[]> result = postRepository.findPosts(pageable);
+
+		List<PostListDTO.Post> posts = result.getContent().stream()
+			.map(e -> {
+				Post obj = (Post) e[0];
+				PostLikeKey likeKey = PostLikeKey.builder()
+					.post(obj.getPostId())
+					.member(memberId)
+					.build();
+				Optional<PostLike> postLike = postLikeRepository.findById(likeKey);
+				boolean isLike = false;
+				if(postLike.isPresent()){
+					isLike = true;
+				}
+				return PostListDTO.Post.builder()
+					.postId(obj.getPostId())
+					.content(obj.getPostContent())
+					.likeCount(obj.getLikeCount())
+					.albumImg(obj.getPostAlbumImage())
+					.artist(obj.getPostArtist())
+					.title(obj.getPostTitle())
+					.commentCount(obj.getCommentCount())
+					.profileImg(obj.getMember().getProfileImageUrl())
+					.nickname(obj.getMember().getNickname())
+					.isLike(isLike)
+					.build();
+			}).collect(Collectors.toList());
+		return PostListDTO.Response.builder()
+			.posts(posts)
+			.build();
 	}
 
 	@Override
@@ -55,7 +94,6 @@ public class PostServiceImpl implements PostService{
 
 		Member member = memberRepository.findById(memberId)
 				.orElseThrow(() -> new NotFoundException(ErrorCode.MEMBER_NOT_FOUND));
-
 
 		PostLikeKey likeKey = PostLikeKey.builder()
 			.post(postId)
