@@ -53,7 +53,7 @@ public class Comment {
 	private LocalDateTime createdDate;
 
 	@LastModifiedDate
-	@Column(name = "commment_modified_date")
+	@Column(name = "comment_modified_date")
 	private LocalDateTime modifiedDate;
 
 	@Column(name = "comment_is_deleted")
