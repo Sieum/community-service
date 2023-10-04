@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import sieum.community.communityservice.dto.CommentSaveDTO;
+import sieum.community.communityservice.dto.CommentUpdateDTO;
 import sieum.community.communityservice.service.CommentService;
 
 @RestController
@@ -22,6 +24,8 @@ import sieum.community.communityservice.service.CommentService;
 @RequiredArgsConstructor
 public class CommentController {
 	private final CommentService commentService;
+
+
 
 	@PostMapping(value = "/{postId}/comments")
 	public ResponseEntity<CommentSaveDTO.Response> saveComment(
@@ -31,6 +35,18 @@ public class CommentController {
 		dto.setMemberId(UUID.fromString(memberId));
 		dto.setPostId(postId);
 		return new ResponseEntity<>(commentService.save(dto), HttpStatus.CREATED);
+	}
+
+	@PutMapping(value = "/{postId}/comments/{commentId}")
+	public ResponseEntity<CommentUpdateDTO.Response> updateComment(
+		@RequestHeader(name = "uuid") String memberId,
+		@PathVariable Long postId,
+		@PathVariable Long commentId,
+		@Validated @RequestBody CommentUpdateDTO.Request dto){
+		dto.setCommentId(commentId);
+		dto.setPostId(postId);
+		dto.setMemberId(UUID.fromString(memberId));
+		return new ResponseEntity<>(commentService.update(dto), HttpStatus.OK);
 	}
 
 }

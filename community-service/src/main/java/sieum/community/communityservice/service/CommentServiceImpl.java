@@ -3,6 +3,7 @@ package sieum.community.communityservice.service;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import org.hibernate.annotations.NotFound;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +16,7 @@ import sieum.community.communityservice.dto.CommentUpdateDTO;
 import sieum.community.communityservice.entity.Comment;
 import sieum.community.communityservice.entity.Member;
 import sieum.community.communityservice.entity.Post;
+import sieum.community.communityservice.exception.AccessDeniedException;
 import sieum.community.communityservice.exception.ErrorCode;
 import sieum.community.communityservice.exception.NotFoundException;
 import sieum.community.communityservice.exception.ValidationException;
@@ -73,7 +75,34 @@ public class CommentServiceImpl implements CommentService{
 	@Override
 	@Transactional
 	public CommentUpdateDTO.Response update(CommentUpdateDTO.Request dto) {
-		return null;
+		UUID memberId = dto.getMemberId();
+		Long postId = dto.getPostId();
+		Long commentId = dto.getCommentId();
+		String content = dto.getContent();
+
+		if(memberId == null || StringUtils.isBlank(content) || postId == null || commentId == null){
+			throw new ValidationException(ErrorCode.MISSING_INPUT_VALUE);
+		}
+
+		Member member = memberRepository.findById(memberId)
+			.orElseThrow(() -> new NotFoundException(ErrorCode.MEMBER_NOT_FOUND));
+
+		Post post = postRepository.findById(postId)
+			.orElseThrow(() -> new NotFoundException(ErrorCode.POST_NOT_FOUND));
+
+		Comment comment = commentRepository.findById(commentId)
+			.orElseThrow(()-> new NotFoundException(ErrorCode.COMMENT_NOT_FOUND));
+
+		if(comment.getMember().getId() != memberId){
+			throw new AccessDeniedException(ErrorCode.HANDLE_ACCESS_DENIED);
+		}
+
+		comment.updateContent(content);
+		comment.updatedDate(LocalDateTime.now());
+
+		return CommentUpdateDTO.Response.builder()
+			.success(true)
+			.build();
 	}
 
 	@Override
