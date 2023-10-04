@@ -44,6 +44,11 @@ public class CommentListDTO {
 		private List<Comment> comments = new ArrayList<>();
 	}
 
+	@Getter
+	@Setter
+	@NoArgsConstructor
+	@AllArgsConstructor
+	@Builder
 	public static class Comment{
 		@JsonAlias(value = "comment_id")
 		private Long commentId;

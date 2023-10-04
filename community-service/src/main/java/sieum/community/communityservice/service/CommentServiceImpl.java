@@ -1,9 +1,15 @@
 package sieum.community.communityservice.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.hibernate.annotations.NotFound;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,9 +39,43 @@ public class CommentServiceImpl implements CommentService{
 	private final PostRepository postRepository;
 
 	@Override
-	@Transactional
+	@Transactional(readOnly = true)
 	public CommentListDTO.Response getList(CommentListDTO.Request dto) {
-		return null;
+		int page = dto.getPage();
+		int size = dto.getSize();
+		UUID memberId = dto.getMemberId();
+		Long postId = dto.getPostId();
+
+		Post post = postRepository.findById(postId)
+			.orElseThrow(() -> new NotFoundException(ErrorCode.POST_NOT_FOUND));
+
+		Member member = memberRepository.findById(memberId)
+			.orElseThrow(() -> new NotFoundException(ErrorCode.MEMBER_NOT_FOUND));
+
+		Pageable pageable = PageRequest.of(page, size);
+
+		Page<Object[]> result = commentRepository.findCommentsOrderByDate(pageable);
+
+		List<CommentListDTO.Comment> comments = result.getContent().stream()
+			.map(obj -> {
+				Comment entity = (Comment)obj[0];
+				return CommentListDTO.Comment.builder()
+					.commentId(entity.getCommentId())
+					.nickname(entity.getMember().getNickname())
+					.profileImg(entity.getMember().getProfileImageUrl())
+					.modifiedDate(entity.getModifiedDate())
+					.createdDate(entity.getCreatedDate())
+					.content(entity.getCommentContent())
+					.memberId(entity.getMember().getId())
+					.build();
+			}).collect(Collectors.toList());
+
+		return CommentListDTO.Response.builder()
+			.prev(result.hasPrevious())
+			.next(result.hasNext())
+			.comments(comments)
+			.page(result.getNumber())
+			.build();
 	}
 
 	@Override
