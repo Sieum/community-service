@@ -29,13 +29,18 @@ import sieum.community.communityservice.service.CommentService;
 public class CommentController {
 	private final CommentService commentService;
 
-	@GetMapping(value = "/{postId}/comments")
+	@GetMapping(value = "/{postId}/comments/{page}/{size}")
 	public ResponseEntity<CommentListDTO.Response> getCommentList(
 		@RequestHeader(name = "uuid") String memberId,
 		@PathVariable Long postId,
-		@RequestBody CommentListDTO.Request dto){
-		dto.setMemberId(UUID.fromString(memberId));
-		dto.setPostId(postId);
+		@PathVariable int page,
+		@PathVariable int size){
+		CommentListDTO.Request dto = CommentListDTO.Request.builder()
+			.memberId(UUID.fromString(memberId))
+			.postId(postId)
+			.page(page)
+			.size(size)
+			.build();
 		return new ResponseEntity<>(commentService.getList(dto), HttpStatus.OK);
 	}
 

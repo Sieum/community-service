@@ -17,11 +17,17 @@ public class PostController {
 
 	private final PostService postService;
 
-	@GetMapping
+	@GetMapping(value = "/{page}/{size}")
 	public ResponseEntity<PostListDTO.Response> getAllPosts(
 		@RequestHeader(name = "uuid") String memberId,
-		@RequestBody PostListDTO.Request dto){
-		dto.setMemberId(UUID.fromString(memberId));
+		@PathVariable int page,
+		@PathVariable int size){
+		System.out.println("들어오옹아ㅣㅣ니니ㅣ니니ㅣㄴ");
+		PostListDTO.Request dto = PostListDTO.Request.builder()
+			.memberId(UUID.fromString(memberId))
+			.page(page)
+			.size(size)
+			.build();
 		PostListDTO.Response list = postService.getAllPosts(dto);
 		return new ResponseEntity<>(list, HttpStatus.OK);
 	}
