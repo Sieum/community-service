@@ -80,6 +80,9 @@ public class PostServiceImpl implements PostService{
 			}).collect(Collectors.toList());
 		return PostListDTO.Response.builder()
 			.posts(posts)
+			.prev(result.hasPrevious())
+			.next(result.hasNext())
+			.page(result.getNumber())
 			.build();
 	}
 

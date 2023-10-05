@@ -38,6 +38,9 @@ public class PostListDTO {
 	@Builder
 	@ToString
 	public static class Response{
+		private boolean prev;
+		private boolean next;
+		private int page;
 		@Builder.Default
 		private List<Post> posts = new ArrayList<>();
 	}
